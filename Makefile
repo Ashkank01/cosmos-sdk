@@ -184,6 +184,19 @@ godocs:
 # Warning: make init-simapp will remove all data in simapp home directory
 init-simapp:
 	./scripts/init-simapp.sh
+PACKAGES_NOSIMULATION=$(shell go list ./... | grep -v '/simulation')
+PACKAGES_SIMTEST=$(shell go list ./... | grep '/simulation')
+export VERSION := $(shell echo $(shell git describe --tags --always --match "v*") | sed 's/^v//')
+export COMMIT := $(shell git log -1 --format='%H')
+LEDGER_ENABLED ?= true
+BINDIR ?= $(GOPATH)/bin
+BUILDDIR ?= $(CURDIR)/build
+SIMAPP = ./simapp
+MOCKS_DIR = $(CURDIR)/tests/mocks
+HTTPS_GIT := https://github.com/cosmos/cosmos-sdk.git
+DOCKER := $(shell which docker)
+PROJECT_NAME = $(shell git remote get-url origin | xargs basename -s .git)
+
 
 test: test-unit
 test-e2e:
